@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>CA .{{ ca.tld }} — {{ ca.name }}</h3>
+<p>
+  <a class="btn btn-sm btn-secondary" href="{{ url_for('main.ca_download', ca_id=ca.id) }}"><i class="fa-solid fa-download me-2"></i>Descarregar CA (.crt)</a>
+</p>
+{% if current_user.role == 'admin' %}
+<div class="card mb-4">
+  <div class="card-header">Emetre un nou certificat per subdomini</div>
+  <div class="card-body">
+    <form method="POST" action="{{ url_for('main.issue', ca_id=ca.id) }}">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Common Name (CN)</label>
+          <input class="form-control" name="common_name" placeholder="p.ex. nas.{{ ca.tld }}" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">SubjectAltName (DNS, separats per coma)</label>
+          <input class="form-control" name="san" placeholder="nas.{{ ca.tld }}, *.lan.{{ ca.tld }}">
+        </div>
+        <div class="col-md-2">
+          <label class="form-label">Dies vàlids</label>
+          <input type="number" class="form-control" name="days_valid" value="825" min="1" max="3980">
+        </div>
+      </div>
+      <button class="btn btn-primary mt-3" type="submit">Emetre</button>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+<h4>Certificats emesos</h4>
+<table class="table table-sm align-middle">
+  <thead>
+    <tr>
+      <th>CN</th>
+      <th>SAN</th>
+      <th>Creat</th>
+      <th>Caduca</th>
+      <th>Descarregar</th>
+      <th>Accions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for cert in certs %}
+    <tr>
+      <td><code>{{ cert.common_name }}</code></td>
+      <td class="small">{{ cert.san }}</td>
+      <td>{{ cert.created_at.strftime('%Y-%m-%d') }}</td>
+      <td class="{% if cert.expires_at < loop.cycle(ca.created_at, ca.created_at) %}text-danger{% endif %}">{{ cert.expires_at.strftime('%Y-%m-%d') }}</td>
+      <td>
+        <div class="btn-group btn-group-sm">
+          <a class="btn btn-outline-secondary" href="{{ url_for('main.cert_download', cert_id=cert.id, type='bundle') }}">bundle</a>
+          <a class="btn btn-outline-secondary" href="{{ url_for('main.cert_download', cert_id=cert.id, type='crt') }}">crt</a>
+          <a class="btn btn-outline-secondary" href="{{ url_for('main.cert_download', cert_id=cert.id, type='key') }}">key</a>
+        </div>
+      </td>
+      <td>
+        <form method="POST" action="{{ url_for('main.cert_delete', cert_id=cert.id) }}" onsubmit="return confirm('Eliminar certificat?');">
+          <button class="btn btn-sm btn-outline-danger" type="submit"> <i class="fa-solid fa-trash me-2"></i>Eliminar</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+      <tr><td colspan="6" class="text-center">No hi ha certificats</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+<!-- Danger Zone -->
+ {% if current_user.role == 'admin' %}
+<h4>Danger Zone</h4>
+<p>
+  <a class="btn btn-sm btn-danger" href="{{ url_for('main.ca_delete', ca_id=ca.id) }}" onclick="return confirm('Eliminar aquesta CA i tots els certificats emesos? Aquesta acció no es pot desfer.');"><i class="fa-solid fa-trash me-2"></i>Eliminar CA</a>
+</p>
+
+{% endif %}
+<p><a href="{{ url_for('main.index') }}">← Tornar</a></p>
+{% endblock %}

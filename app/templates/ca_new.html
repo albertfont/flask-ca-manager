@@ -1,0 +1,23 @@
+i{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-6">
+    <div class="card mb-4">
+      <div class="card-header">Crear nova Entitat Certificadora</div>
+      <div class="card-body">
+        <form method="POST" action="{{ url_for('main.ca_new') }}">
+          <div class="mb-3">
+            <label class="form-label">Nom organització (p.ex. Casa Font)</label>
+            <input class="form-control" name="name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">TLD intern (p.ex. home, local, casa)</label>
+            <input class="form-control" name="tld" pattern="[a-z0-9-]+" required>
+          </div>
+          <button class="btn btn-primary" type="submit">Crear CA</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Gestió d'usuaris</h3>
+<form method="POST" class="mb-4">
+  <div class="row g-2 align-items-end">
+    <div class="col-md-3">
+      <label class="form-label">Nom d'usuari</label>
+      <input name="username" class="form-control" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Contrasenya</label>
+      <input type="password" name="password" class="form-control" required>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Rol</label>
+      <select name="role" class="form-select">
+        <option value="reader">Lector</option>
+        <option value="admin">Administrador</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <button class="btn btn-primary" type="submit">Afegir usuari</button>
+    </div>
+  </div>
+</form>
+
+<table class="table table-sm">
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Rol</th>
+      <th>Accions</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for u in users %}
+    <tr>
+      <td>{{ u.username }}</td>
+      <td>{{ u.role }}</td>
+      <td>
+        <a class="btn btn-sm btn-outline-danger" href="{{ url_for('auth.user_delete', user_id=u.id) }}" onclick="return confirm('Eliminar usuari?');"><i class="fa-solid fa-trash me-2"></i>Eliminar</a></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

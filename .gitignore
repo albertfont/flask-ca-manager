@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+
+# Flask / SQLite
+instance/
+data/
+*.db
+
+# Certificats
+certs/
+*.key
+*.crt
+*.pem
+
+# Docker
+*.log
+*.pid
+
+# Alembic / Migrations cache
+migrations/
+
+# IDEs
+.vscode/
+.idea/
+
+# Sistema
+.DS_Store

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3 class="mt-3">Entitats Certificadores</h3>
+<div class="row">
+  {% for ca in cas %}
+    <div class="col-md-6">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">.{{ ca.tld }} — {{ ca.name }}</h5>
+          <p class="card-text"><small class="text-muted">Creada: {{ ca.created_at.strftime('%Y-%m-%d %H:%M') }}</small></p>
+          <a class="btn btn-sm btn-secondary" href="{{ url_for('main.ca_download', ca_id=ca.id) }}">Descarregar CA (.crt)</a>
+          <a class="btn btn-sm btn-outline-primary" href="{{ url_for('main.ca_detail', ca_id=ca.id) }}">Gestionar</a>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <p>Encara no hi ha cap CA. Crea'n una!</p>
+  {% endfor %}
+</div>
+
+{% endblock %}

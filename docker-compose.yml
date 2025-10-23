@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  ca:
+    build: .
+    container_name: flask-ca-manager
+    environment:
+      - SECRET_KEY=please-change-me
+      - DATA_ROOT=/data
+    volumes:
+      - ./data/db:/data/db
+      - ./data/certs:/data/certs
+    ports:
+      - "5090:5090"
+    restart: unless-stopped
