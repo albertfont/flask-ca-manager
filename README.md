@@ -7,7 +7,7 @@ A tiny, self-hosted CA for home labs. Create a CA per internal TLD (e.g., `home`
 ## Quick start
 
 ```bash
-git clone https://example.com/flask-ca-manager.git
+git clone https://github.com/albertfont/flask-ca-manager.git
 cd flask-ca-manager
 docker compose up --build -d
 # Open http://localhost:8000
